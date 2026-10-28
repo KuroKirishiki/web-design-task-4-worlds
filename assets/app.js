@@ -1,9 +1,9 @@
-const slug=location.pathname.split('/').filter(Boolean).pop();
+const slug=document.body.classList[0];
 const {default:c}=await import(`../${slug}/config.js`);
 const $=s=>document.querySelector(s), money=n=>new Intl.NumberFormat('ru-RU').format(n)+' ₽';
 const key='task4-'+c.slug+'-v1'; let selected=null, bookings=[];let persistence=true;
 const warning=t=>$('#storage-warning').textContent=t;
-try {const raw=localStorage.getItem(key); if(raw){const data=JSON.parse(raw);if(!Array.isArray(data)||!data.every(b=>b&&typeof b.id==='string'&&c.objects.some(o=>o.id===b.objectId&&!o.occupied)&&Number.isInteger(b.guests)&&b.guests>=1&&b.guests<=c.objects.find(o=>o.id===b.objectId).capacity&&Number.isInteger(b.duration)&&b.duration>=1&&b.duration<=c.max&&b.total===c.objects.find(o=>o.id===b.objectId).price*b.duration)||new Set(data.map(b=>b.objectId)).size!==data.length)throw Error();bookings=data;}}
+try {const raw=localStorage.getItem(key); if(raw){const data=JSON.parse(raw);if(!Array.isArray(data)||!data.every(b=>b&&typeof b.id==='string'&&/^[A-Z0-9]+-[1-8]$/.test(b.id)&&c.objects.some(o=>o.id===b.objectId&&!o.occupied)&&Number.isInteger(b.guests)&&b.guests>=1&&b.guests<=c.objects.find(o=>o.id===b.objectId).capacity&&Number.isInteger(b.duration)&&b.duration>=1&&b.duration<=c.max&&b.total===c.objects.find(o=>o.id===b.objectId).price*b.duration)||new Set(data.map(b=>b.objectId)).size!==data.length)throw Error();bookings=data;}}
 catch(e){warning('Не удалось прочитать сохранённые брони. Показана исходная схема; можно сбросить демо или продолжить.');}
 function save(){try{localStorage.setItem(key,JSON.stringify(bookings));persistence=true;warning('');}catch{persistence=false;warning('Браузер запретил сохранение. Брони доступны до закрытия или обновления страницы.');}}
 const busy=o=>o.occupied||bookings.some(b=>b.objectId===o.id);
